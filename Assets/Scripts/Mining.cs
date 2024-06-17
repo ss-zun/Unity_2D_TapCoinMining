@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Mining : MonoBehaviour
 {
+    public static Mining instance;
     public TextMeshProUGUI CoinTxt;
 
     public int amount;
@@ -13,11 +14,16 @@ public class Mining : MonoBehaviour
     public int coin;
     public bool IsAuto;
 
+    private void Awake()
+    {
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void Start()
     {
         InitializeUserData();
         UpdateCoinText();
-        UnityEngine.Debug.Log(DataManager.instance.UserInfo.Speed);
 
         StartCoroutine(AutoClick());
     }
@@ -27,6 +33,7 @@ public class Mining : MonoBehaviour
         amount = DataManager.instance.UserInfo.Amount;
         speed = DataManager.instance.UserInfo.Speed;
         coin = DataManager.instance.UserInfo.Coin;
+        IsAuto = DataManager.instance.UserInfo.IsAuto;
     }
 
     private IEnumerator AutoClick()
@@ -61,8 +68,16 @@ public class Mining : MonoBehaviour
         UpdateCoinText();
     }
 
-    private void UpdateCoinText()
+    public void UpdateCoinText()
     {
         CoinTxt.text = coin.ToString();
+    }
+
+    public void SaveData()
+    {
+        DataManager.instance.UserInfo.Amount = amount;
+        DataManager.instance.UserInfo.Speed = speed;
+        DataManager.instance.UserInfo.Coin = coin;
+        DataManager.instance.UserInfo.IsAuto = IsAuto;
     }
 }

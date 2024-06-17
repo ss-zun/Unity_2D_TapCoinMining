@@ -27,12 +27,15 @@ public class UserInfo
     public int Amount;
     public float Speed;
     public int Coin;
+    public bool IsAuto;
 }
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
     public UserInfo UserInfo;
     public ShopData ShopDatas;
+
+    public event Action OnSaveData;
 
     string USERINFO_PATH = Application.dataPath + "/Resources/Data/UserInfo.json";
     string SHOPDATA_PATH = Application.dataPath + "/Resources/Data/SlotDatas.json";
@@ -77,6 +80,9 @@ public class DataManager : MonoBehaviour
 
     public void SaveData()
     {
+        OnSaveData?.Invoke();
+
+        Mining.instance.SaveData();
         var userData = JsonUtility.ToJson(UserInfo);
         File.WriteAllText(USERINFO_PATH, userData);
         Debug.Log("Data saved to " + USERINFO_PATH);
@@ -88,5 +94,10 @@ public class DataManager : MonoBehaviour
 #if UNITY_EDITOR
         AssetDatabase.Refresh();
 #endif
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveData();
     }
 }
