@@ -54,7 +54,7 @@ public class DataManager : MonoBehaviour
             UserInfo = new UserInfo();
             UserInfo.Amount = 1;
             UserInfo.Speed = 0.01f;
-            UserInfo.Coin = 9;
+            UserInfo.Coin = 0;
         }
         else
         {
